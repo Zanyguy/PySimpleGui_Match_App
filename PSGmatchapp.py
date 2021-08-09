@@ -3,6 +3,8 @@ import board_movement
 import random
 
 def main():
+    """main function, controls window setup and game initialization"""
+    
     layout = [[sg.Button(size=(4,2), key=(row,col)) for col in range(8)] for row in range(8)]
     layout += [[sg.Button('Show'),sg.Button('Reset'), sg.Button('Cancel')]]
     window = sg.Window('Match App', layout, use_default_focus=False)
@@ -26,7 +28,7 @@ def main():
             update_board(window, board)
         elif not board[event][0]:
             if last_pressed:
-                gamelogic(board, event, last_pressed)
+                gamelogic(last_pressed, event, board)
                 last_pressed = None
             else:
                 last_pressed = event
@@ -39,13 +41,17 @@ def main():
         
     window.close()
 
-def gamelogic(board, event, last_pressed):
+def gamelogic(last_pressed, event, board):
+    """Run game logic functions in correct order."""
+    
     if board_movement.valid_move(last_pressed, event, board):
         board_movement.single_move(last_pressed, event, board)
         board_movement.match_factory(last_pressed, event, board)
 
 
 def update_board(window, board):
+    """Update buttons with images and trigger shape refill."""
+    
     new_shapes(board)
     for row in range(8):
         for col in range(8):
